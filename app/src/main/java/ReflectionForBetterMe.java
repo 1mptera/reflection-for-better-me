@@ -1,21 +1,30 @@
+import models.Posting;
 import utils.PostingPanel;
 import utils.WritingPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReflectionForBetterMe {
   private JFrame mainFrame;
   private JPanel contentPanel;
+  private Posting posting;
+  private PostingPanel postingPanel;
+
+  private List<Posting> postings = new ArrayList<>();
+
 
   public static void main(String[] args) {
-
-
     ReflectionForBetterMe application = new ReflectionForBetterMe();
     application.run();
   }
 
   public void run() {
+
+    //posting = new Posting("제목을 입력하세요.","블라블라블라");
+
     mainFrame = new JFrame("Reflect yourself!");
     mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     mainFrame.setSize(700,800);
@@ -27,16 +36,39 @@ public class ReflectionForBetterMe {
   }
 
   public void initMenu() {
-    JPanel panel = new JPanel();
+    JPanel mainPanel = new JPanel();
 
     createPostingPanelButton();
-    panel.add(createPostingPanelButton());
+    mainPanel.add(createPostingPanelButton());
 
     createWritingPanelButton();
-    panel.add(createWritingPanelButton());
+    mainPanel.add(createWritingPanelButton());
 
-    mainFrame.add(panel, BorderLayout.PAGE_START);
+    mainFrame.add(mainPanel, BorderLayout.PAGE_START);
 
+  }
+
+  public JButton createPostingPanelButton() {
+    JButton button = new JButton("회고 게시판");
+    button.addActionListener(event -> {
+       JPanel postingPanel = new PostingPanel(postings);
+
+      showContentPanel(postingPanel);
+
+    });
+    return button;
+  }
+
+
+  public JButton createWritingPanelButton() {
+    JButton button = new JButton("회고 쓰러가기");
+    button.addActionListener(event -> {
+      JPanel writingPanel = new WritingPanel(postings);
+
+      showContentPanel(writingPanel);
+
+    });
+    return button;
   }
 
   public void initContentPanel() {
@@ -44,28 +76,11 @@ public class ReflectionForBetterMe {
     mainFrame.add(contentPanel);
   }
 
-  public JButton createPostingPanelButton() {
-    JButton button = new JButton("회고 게시판");
-    button.addActionListener(event -> {
-      JPanel postingPanel = new PostingPanel();
-
-      contentPanel.removeAll();
-      contentPanel.add(postingPanel);
-      mainFrame.setVisible(true);
-
-    });
-    return button;
-  }
-
-  public JButton createWritingPanelButton() {
-    JButton button = new JButton("회고 쓰러가기");
-    button.addActionListener(event -> {
-      JPanel writingPanel = new WritingPanel();
-      contentPanel.removeAll();
-      contentPanel.add(writingPanel);
-      mainFrame.setVisible(true);
-
-    });
-    return button;
+  public void showContentPanel(JPanel panel) {
+    contentPanel.removeAll();
+    contentPanel.add(panel);
+    contentPanel.setVisible(false);
+    contentPanel.setVisible(true);
+    mainFrame.setVisible(true);
   }
 }
